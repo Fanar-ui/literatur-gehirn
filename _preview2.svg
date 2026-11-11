@@ -1,0 +1,117 @@
+<svg viewBox="0 0 1000 720" class="mindmap-svg" role="img" aria-label="Mindmap der Literatur" xmlns="http://www.w3.org/2000/svg"><style>:root {
+  --uni-dunkelblau: #00385f;
+  --uni-hellblau: #009ed4;
+  --uni-grau: #64727f;
+  --bg: #f4f6f8;
+  --line: #d9dee3;
+  --text: #1c2833;
+  --ok: #2e7d4f;
+  --warn: #b26a00;
+  --radius: 6px;
+  font-family: Calibri, "Segoe UI", Arial, sans-serif;
+  color: #1c2833;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+
+.topbar {
+  display: flex; align-items: baseline; gap: 16px;
+  background: #00385f; color: #fff; padding: 14px 24px;
+}
+.topbar h1 { margin: 0; font-size: 22px; }
+.topbar .sub { opacity: .8; font-size: 14px; }
+.topbar-actions { margin-left: auto; display: flex; gap: 8px; }
+.topbar .ghost { color: #fff; border-color: rgba(255,255,255,.5); }
+
+.layout { display: grid; grid-template-columns: 380px 1fr; gap: 16px; padding: 16px; min-height: calc(100vh - 56px); }
+.panel { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+.panel h2 { font-size: 16px; color: #00385f; margin: 18px 0 6px; }
+.panel h2:first-child { margin-top: 0; }
+.hint { color: var(--uni-grau); font-size: 13px; margin: 0 0 8px; }
+label { display: block; font-size: 13px; color: var(--uni-grau); margin: 10px 0 4px; }
+
+textarea, input[type=text] {
+  width: 100%; font: inherit; font-size: 14px; padding: 8px 10px;
+  border: 1px solid var(--line); border-radius: var(--radius); background: #fff;
+}
+textarea:focus, input:focus { outline: 2px solid #009ed4; outline-offset: -1px; }
+
+.row { display: flex; gap: 8px; margin-top: 8px; }
+.row input { flex: 1; }
+button, .file-btn {
+  font: inherit; font-size: 14px; cursor: pointer; padding: 7px 14px;
+  border-radius: var(--radius); border: 1px solid #00385f;
+  background: #00385f; color: #fff;
+}
+button:hover { background: #004b7f; }
+button:disabled { opacity: .5; cursor: default; }
+.ghost { background: transparent; color: #00385f; }
+.ghost:hover { background: rgba(0,158,212,.08); }
+
+.status { font-size: 13px; color: var(--uni-grau); min-height: 18px; margin-top: 6px; }
+.status.error { color: #b00020; }
+
+.card {
+  border: 1px solid var(--line); border-left: 4px solid #009ed4;
+  border-radius: var(--radius); padding: 8px 10px; margin-top: 8px; cursor: pointer; background: #fff;
+}
+.card:hover { background: #f0f8fc; }
+.card.disabled { cursor: default; opacity: .55; border-left-color: var(--uni-grau); }
+.card .title { font-weight: 600; font-size: 14px; }
+.card .meta { color: var(--uni-grau); font-size: 12px; margin-top: 2px; }
+.selected { margin-top: 12px; padding-top: 4px; border-top: 1px dashed var(--line); }
+
+.brain-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.footprint { font-size: 13px; color: var(--uni-grau); }
+.footprint b { color: #00385f; }
+
+.paper { border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; margin-top: 10px; }
+.paper .title { font-weight: 600; }
+.paper .meta { color: var(--uni-grau); font-size: 12px; margin: 2px 0 6px; }
+.paper .summary { font-size: 14px; line-height: 1.4; }
+.badge { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 10px; margin-right: 6px;
+  background: rgba(0,158,212,.12); color: #00385f; }
+.links { margin-top: 6px; font-size: 13px; color: var(--uni-grau); }
+.empty { color: var(--uni-grau); font-size: 14px; margin-top: 12px; }
+
+dialog { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; max-width: 420px; }
+dialog::backdrop { background: rgba(0,56,95,.35); }
+
+/* Mindmap */
+#mindmap { margin-top: 8px; }
+.mindmap-svg { width: 100%; height: auto; max-height: 72vh; display: block; background: #fbfcfd; border: 1px solid var(--line); border-radius: var(--radius); }
+.mm-ring { fill: none; stroke: #e3e8ec; stroke-width: 1; }
+.mm-ring-label { font-size: 11px; fill: #9aa5ae; }
+.mm-sector { stroke: #e3e8ec; stroke-width: 1; stroke-dasharray: 2 4; }
+.mm-cluster { font-size: 13px; font-weight: 600; }
+.mm-link { stroke-width: 1.6; }
+.mm-link.cites { stroke: #00385f; }
+.mm-link.theme { stroke: #009ed4; stroke-dasharray: 5 4; }
+.mm-center { fill: #00385f; }
+.mm-center-text { fill: #fff; font-size: 12px; }
+.mm-node { cursor: pointer; }
+.mm-node circle { stroke: #fff; stroke-width: 2; }
+.mm-node:hover circle, .mm-node:focus circle { stroke: #00385f; stroke-width: 3; }
+.mm-node:focus { outline: none; }
+.mm-label { font-size: 12px; fill: #1c2833; paint-order: stroke; stroke: #fbfcfd; stroke-width: 4px; }
+.mm-legend { display: flex; gap: 18px; font-size: 12px; color: var(--uni-grau); margin-top: 6px; }
+.mm-legend span::before { content: ""; display: inline-block; width: 22px; vertical-align: middle; margin-right: 6px; border-top: 2px solid #00385f; }
+.mm-legend .lg-theme::before { border-top: 2px dashed #009ed4; }
+.paper.highlight { outline: 2px solid #009ed4; }
+</style><defs><marker id="arrow" viewBox="0 0 10 10" refX="17" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#00385f"></path></marker></defs><circle cx="500" cy="360" r="96" class="mm-ring"></circle><text x="504" y="278" class="mm-ring-label">Kern</text><circle cx="500" cy="360" r="166.4" class="mm-ring"></circle><text x="504" y="207.6" class="mm-ring-label">wichtig</text><circle cx="500" cy="360" r="236.8" class="mm-ring"></circle><text x="504" y="137.2" class="mm-ring-label">Hintergrund</text><circle cx="500" cy="360" r="307.2" class="mm-ring"></circle><text x="504" y="66.80000000000001" class="mm-ring-label">Randthema</text><line x1="500" y1="360" x2="500" y2="40" class="mm-sector"></line><line x1="500" y1="360" x2="726.2741699796952" y2="586.2741699796952" class="mm-sector"></line><line x1="500" y1="360" x2="500" y2="680" class="mm-sector"></line><line x1="500" y1="360" x2="180" y2="360.00000000000006" class="mm-sector"></line><text x="819.6623182489052" y="227.59153240167893" class="mm-cluster" fill="#009ed4" text-anchor="start">Arbeitsmarkt</text><text x="632.4084675983211" y="679.6623182489052" class="mm-cluster" fill="#00385f" text-anchor="start">Arbeitsorganisation</text><text x="255.34105370945457" y="604.6589462905455" class="mm-cluster" fill="#2e7d4f" text-anchor="end">KI-Kompetenzen</text><text x="255.3410537094545" y="115.34105370945457" class="mm-cluster" fill="#b26a00" text-anchor="end">Produktivität</text><line x1="653.7335542098781" y1="296.3214768544491" x2="563.6785231455509" y2="206.26644579012188" class="mm-link cites" marker-end="url(#arrow)"><title>Zitation laut OpenAlex</title></line><line x1="411.3075648789165" y1="323.2623904929514" x2="563.6785231455509" y2="206.26644579012188" class="mm-link cites" marker-end="url(#arrow)"><title>Zitation laut OpenAlex</title></line><line x1="409.3805632159466" y1="141.22532670132733" x2="653.7335542098781" y2="296.3214768544491" class="mm-link theme"><title>Thematisch nah: </title></line><line x1="346.2664457901219" y1="423.67852314555097" x2="463.2623904929514" y2="448.6924351210835" class="mm-link theme"><title>Thematisch nah: </title></line><line x1="718.7746732986727" y1="450.6194367840533" x2="563.6785231455509" y2="206.26644579012188" class="mm-link theme"><title>Thematisch nah: </title></line><circle cx="500" cy="360" r="74" class="mm-center"></circle><text x="500" y="328" class="mm-center-text" text-anchor="middle"><tspan x="500" dy="0">Die Masterarbeit</tspan><tspan x="500" dy="16">untersucht, wie</tspan><tspan x="500" dy="16">generative KI die</tspan><tspan x="500" dy="16">Arbeit von</tspan><tspan x="500" dy="16"> …</tspan><title>Die Masterarbeit untersucht, wie generative KI die Arbeit von Wissensarbeitenden verändert und welche Kompetenzen dadurch wichtiger werden.</title></text><g class="mm-node" tabindex="0"><circle cx="563.6785231455509" cy="206.26644579012188" r="9" fill="#009ed4"></circle><text x="563.6785231455509" y="190.26644579012188" text-anchor="middle" class="mm-label">GPTs are GPTs: Labor market i…</text><title>GPTs are GPTs: Labor market impact potential of LLMs
+A 2025
+Cluster: Arbeitsmarkt</title></g><g class="mm-node" tabindex="0"><circle cx="653.7335542098781" cy="296.3214768544491" r="9" fill="#009ed4"></circle><text x="653.7335542098781" y="280.3214768544491" text-anchor="middle" class="mm-label">Generative AI at Work</text><title>Generative AI at Work
+A 2025
+Cluster: Arbeitsmarkt</title></g><g class="mm-node" tabindex="0"><circle cx="411.3075648789165" cy="323.2623904929514" r="9" fill="#b26a00"></circle><text x="411.3075648789165" y="307.2623904929514" text-anchor="middle" class="mm-label">Navigating the Jagged Technol…</text><title>Navigating the Jagged Technological Frontier
+A 2025
+Cluster: Produktivität</title></g><g class="mm-node" tabindex="0"><circle cx="409.3805632159466" cy="141.22532670132733" r="9" fill="#b26a00"></circle><text x="409.3805632159466" y="125.22532670132733" text-anchor="middle" class="mm-label">The Impact of AI on Developer…</text><title>The Impact of AI on Developer Productivity
+A 2025
+Cluster: Produktivität</title></g><g class="mm-node" tabindex="0"><circle cx="463.2623904929514" cy="448.6924351210835" r="9" fill="#2e7d4f"></circle><text x="463.2623904929514" y="472.6924351210835" text-anchor="middle" class="mm-label">Future Skills: Kompetenzen fü…</text><title>Future Skills: Kompetenzen für die digitale Arbeitswelt
+A 2025
+Cluster: KI-Kompetenzen</title></g><g class="mm-node" tabindex="0"><circle cx="346.2664457901219" cy="423.67852314555097" r="9" fill="#2e7d4f"></circle><text x="346.2664457901219" y="447.67852314555097" text-anchor="middle" class="mm-label">AI Literacy: Definition and M…</text><title>AI Literacy: Definition and Measurement
+A 2025
+Cluster: KI-Kompetenzen</title></g><g class="mm-node" tabindex="0"><circle cx="617.5603504225555" cy="643.8157923874674" r="9" fill="#00385f"></circle><text x="617.5603504225555" y="667.8157923874674" text-anchor="middle" class="mm-label">Remote work and productivity</text><title>Remote work and productivity
+A 2025
+Cluster: Arbeitsorganisation</title></g><g class="mm-node" tabindex="0"><circle cx="718.7746732986727" cy="450.6194367840533" r="9" fill="#009ed4"></circle><text x="718.7746732986727" y="474.6194367840533" text-anchor="middle" class="mm-label">Automation and New Tasks</text><title>Automation and New Tasks
+A 2025
+Cluster: Arbeitsmarkt</title></g></svg>

@@ -1,0 +1,218 @@
+/* EcoGovernance Agent – animierter Maskottchen-Agent.
+   Zustaende per Klasse am Wurzel-Element: .ag-idle | .ag-thinking | .ag-talking | .ag-error
+   Die SVG liegt in drei Ebenen uebereinander (Glow, Hauptlinie, Halo); jedes Teil
+   (Auge, Antenne, Wange ...) hat in jeder Ebene dieselbe Klasse, deshalb bewegen
+   sich alle drei Kopien gemeinsam. */
+
+.ag-root {
+  --ag-deep: #009500;
+  --ag-main: #00ff00;
+  --ag-halo: #ffffff;
+  --ag-bg: #000000;
+  --ag-glow: rgba(0, 255, 80, 0.45);
+  display: inline-block;
+  line-height: 0;
+  filter: drop-shadow(0 0 6px var(--ag-glow));
+  transition: filter 0.4s ease;
+}
+.ag-root svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Jedes bewegliche Teil dreht/skaliert um seine eigene Mitte */
+.ag-root .ag-eyes,
+.ag-root .ag-eye,
+.ag-root .ag-mouth,
+.ag-root .ag-cheek,
+.ag-root .ag-drop,
+.ag-root .ag-bolt,
+.ag-root .ag-pupil,
+.ag-root .ag-antL,
+.ag-root .ag-antR,
+.ag-root .ag-body {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.35s ease;
+}
+/* Antennen drehen sich um ihren Fusspunkt am Kopf */
+.ag-root .ag-antL { transform-origin: 100% 100%; }
+.ag-root .ag-antR { transform-origin: 0% 100%; }
+/* Mund oeffnet sich nach unten */
+.ag-root .ag-mouth { transform-origin: 50% 0%; }
+
+/* ---------- Tropfen (Wasser) blau, Blitz (Energie) gelb, pulsierend ---------- */
+.ag-root:not(.ag-error) .ag-drop,
+.ag-root:not(.ag-error) .ag-bolt {
+  --ag-main: currentColor;
+  --ag-deep: currentColor;
+  --ag-halo: currentColor;
+}
+.ag-root:not(.ag-error) .ag-drop { color: #38bdf8; animation: ag-water 3.5s ease-in-out infinite; }
+.ag-root:not(.ag-error) .ag-bolt { color: #facc15; animation: ag-energy 3.5s ease-in-out infinite; animation-delay: -1.75s; }
+
+/* ---------- immer: Blinzeln (ausser im Fehlerzustand) ---------- */
+.ag-root:not(.ag-error) .ag-eye {
+  animation: ag-blink 4.8s infinite;
+}
+.ag-root .ag-eyeR { animation-delay: 0.04s; }
+
+/* Fliessende Wechsel idle <-> thinking (2026-10-16): jede Schleife beginnt und
+   endet in derselben Grundpose (Antennen 0deg, Pupillen mittig, Tropfen dunkel,
+   Blitz hell, Glow normal). Die Schleifen teilen sich glatt in 7 s (idle) bzw.
+   4,8 s (thinking); LandingAgent wechselt genau an diesen Grenzen
+   (animationiteration von ag-glance bzw. ag-look). */
+
+/* ---------- idle (eine Runde = 7 s) ---------- */
+.ag-idle .ag-antL { animation: ag-sway-l 3.5s ease-in-out infinite; }
+.ag-idle .ag-antR { animation: ag-sway-r 3.5s ease-in-out infinite; }
+.ag-idle .ag-pupil { animation: ag-glance 7s ease-in-out infinite; }
+.ag-root .ag-shine { animation: ag-twinkle 3.2s ease-in-out infinite; }
+.ag-idle .ag-tip ellipse { animation: ag-tip-soft 3.5s ease-in-out infinite; }
+
+/* ---------- thinking: arbeitet im Hintergrund (eine Runde = 4,8 s) ---------- */
+.ag-root.ag-thinking { animation: ag-glow-pulse 1.6s ease-in-out infinite; }
+.ag-thinking .ag-pupil { animation: ag-look 2.4s ease-in-out infinite; }
+.ag-thinking .ag-antL { animation: ag-wiggle-l 1.2s ease-in-out infinite; }
+.ag-thinking .ag-antR { animation: ag-wiggle-r 1.2s ease-in-out infinite; }
+.ag-thinking .ag-tip ellipse { animation: ag-tip-flash 0.8s ease-in-out infinite; }
+.ag-thinking .ag-antR .ag-tip ellipse { animation-name: ag-tip-flash-r; }
+/* Wasser und Energie werden "verbraucht": Tropfen und Blitz pumpen abwechselnd */
+.ag-root.ag-thinking .ag-drop { animation: ag-pump-a 1.2s ease-in-out infinite, ag-water-fast 1.2s ease-in-out infinite; }
+.ag-root.ag-thinking .ag-bolt { animation: ag-pump-b 1.2s ease-in-out infinite, ag-energy-fast 1.2s ease-in-out infinite; animation-delay: 0s, -0.6s; }
+.ag-thinking .ag-mouth { transform: scale(0.7, 0.45); }
+
+/* ---------- talking: antwortet ---------- */
+.ag-talking .ag-body { animation: ag-bob 0.9s ease-in-out infinite; }
+.ag-talking .ag-mouth { animation: ag-talk 0.62s ease-in-out infinite; }
+.ag-talking .ag-antL { animation: ag-sway-l 1.8s ease-in-out infinite; }
+.ag-talking .ag-antR { animation: ag-sway-r 1.8s ease-in-out infinite; }
+.ag-talking .ag-cheek { animation: ag-cheek-soft 1.8s ease-in-out infinite; }
+
+/* ---------- error ---------- */
+.ag-root.ag-error {
+  --ag-deep: #8a5a00;
+  --ag-main: #f59e0b;
+  --ag-halo: #fff1d0;
+  --ag-glow: rgba(245, 158, 11, 0.5);
+}
+.ag-error .ag-body { animation: ag-shake 0.45s ease-in-out 1; }
+.ag-error .ag-antL { transform: rotate(-16deg); }
+.ag-error .ag-antR { transform: rotate(16deg); }
+.ag-error .ag-eye { transform: scaleY(0.55); }
+.ag-error .ag-mouth { transform: translateY(1px) scale(0.8, -0.55); }
+.ag-error .ag-pupil { transform: translateY(1.5px); }
+
+/* ---------- Keyframes ---------- */
+@keyframes ag-blink {
+  0%, 93%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.08); }
+  97% { transform: scaleY(1); }
+}
+@keyframes ag-sway-l {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(-2.5deg); }
+  70% { transform: rotate(3deg); }
+}
+@keyframes ag-sway-r {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(-3deg); }
+  70% { transform: rotate(2.5deg); }
+}
+@keyframes ag-wiggle-l {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(5deg); }
+}
+@keyframes ag-wiggle-r {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(6deg); }
+}
+@keyframes ag-tip-soft {
+  0%, 100% { fill: var(--ag-bg); }
+  50% { fill: var(--ag-deep); }
+}
+@keyframes ag-tip-flash {
+  0%, 100% { fill: var(--ag-bg); }
+  30%, 45% { fill: var(--ag-main); }
+}
+@keyframes ag-tip-flash-r {
+  0%, 100% { fill: var(--ag-bg); }
+  60%, 75% { fill: var(--ag-main); }
+}
+@keyframes ag-look {
+  0%, 100% { transform: translate(0, 0); }
+  20%, 35% { transform: translate(-2.4px, -2.8px); }
+  55%, 70% { transform: translate(2.4px, -2.8px); }
+  85% { transform: translate(0, 1px); }
+}
+@keyframes ag-glance {
+  0%, 40%, 100% { transform: translate(0, 0); }
+  48%, 58% { transform: translate(2.2px, 0); }
+  66%, 76% { transform: translate(-2px, 0.4px); }
+  84% { transform: translate(0, 0); }
+}
+@keyframes ag-twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+/* -fast: eigene Namen fuer thinking, damit die Animation beim Wechsel neu
+   startet statt mitten in der Runde die Dauer zu wechseln (Farbsprung). */
+@keyframes ag-water-fast {
+  0%, 100% { color: #1d6fd1; }
+  50% { color: #7dd3fc; }
+}
+@keyframes ag-energy-fast {
+  0%, 100% { color: #c08a00; }
+  50% { color: #fde047; }
+}
+@keyframes ag-water {
+  0%, 100% { color: #1d6fd1; }
+  50% { color: #7dd3fc; }
+}
+@keyframes ag-energy {
+  0%, 100% { color: #c08a00; }
+  50% { color: #fde047; }
+}
+@keyframes ag-pump-a {
+  0%, 50%, 100% { transform: scale(1); }
+  25% { transform: scale(1.18); }
+}
+@keyframes ag-pump-b {
+  0%, 50%, 100% { transform: scale(1); }
+  75% { transform: scale(1.18); }
+}
+@keyframes ag-cheek-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+@keyframes ag-glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 6px rgba(0, 255, 80, 0.45)) drop-shadow(0 0 0 rgba(0, 255, 80, 0)); }
+  50% { filter: drop-shadow(0 0 12px rgba(0, 255, 80, 0.75)) drop-shadow(0 0 3px rgba(0, 255, 80, 0.75)); }
+}
+@keyframes ag-talk {
+  0%, 100% { transform: scaleY(1); }
+  20% { transform: scaleY(0.45); }
+  40% { transform: scaleY(1.15); }
+  60% { transform: scaleY(0.6); }
+  80% { transform: scaleY(1.05); }
+}
+@keyframes ag-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-1px); }
+}
+@keyframes ag-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  60% { transform: translateX(-1.5px); }
+  80% { transform: translateX(1px); }
+}
+
+/* Systemeinstellung "Bewegung reduzieren": keine Dauer-Animationen, Posen bleiben */
+@media (prefers-reduced-motion: reduce) {
+  .ag-root, .ag-root * { animation: none !important; }
+}

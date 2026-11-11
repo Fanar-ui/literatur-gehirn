@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Literatur-Gehirn</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="agent-mascot.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Literatur-Gehirn</h1>
+    <span class="sub">Deine Literatur, nach deinem Thema geordnet</span>
+    <div class="topbar-actions">
+      <button id="btn-export" class="ghost">Exportieren</button>
+      <label class="ghost file-btn">Importieren<input id="file-import" type="file" accept="application/json" hidden></label>
+    </div>
+  </header>
+
+  <main class="layout" id="layout">
+    <section class="panel left">
+      <button id="btn-sidebar" class="sidebar-toggle" aria-expanded="true" aria-controls="left-content" title="Seitenleiste einklappen">‹</button>
+      <span class="sidebar-label" aria-hidden="true">Literatur suchen</span>
+      <div class="left-content" id="left-content">
+      <h2>Paper hinzufügen</h2>
+      <form id="search-form" class="row">
+        <input id="search-input" type="text" placeholder="Titel, Literaturangabe oder DOI" autocomplete="off">
+        <button type="submit">Suchen</button>
+      </form>
+      <div id="search-status" class="status"></div>
+      <div id="results"></div>
+
+      <div id="selected" class="selected" hidden>
+        <div id="selected-card"></div>
+        <div id="abstract-box" hidden>
+          <label for="abstract-input">OpenAlex hat keinen Abstract. Füge ihn hier ein, sonst wird nur nach dem Titel eingeordnet.</label>
+          <textarea id="abstract-input" rows="5" placeholder="Abstract aus dem Paper einfügen (optional)"></textarea>
+        </div>
+        <div class="row">
+          <button id="btn-add">Ins Gehirn aufnehmen</button>
+          <button id="btn-cancel" class="ghost">Abbrechen</button>
+        </div>
+        <div id="add-status" class="status"></div>
+      </div>
+
+      <h2>Thema der Arbeit</h2>
+      <label for="topic-title">Kurztitel des Hauptthemas</label>
+      <input id="topic-title" type="text" maxlength="60">
+      <label for="topic">Beschreibung (damit wird jedes Paper verglichen)</label>
+      <textarea id="topic" rows="6"></textarea>
+
+      <h2>Unterthemen</h2>
+      <p class="hint">Um diese Unterthemen ordnet sich die Literatur in drei Kreisen.</p>
+      <div id="subtopics"></div>
+      <form id="subtopic-form" class="sub-form">
+        <input id="sub-name" type="text" maxlength="40" placeholder="Name, z. B. Kompetenzen">
+        <textarea id="sub-desc" rows="2" placeholder="Kurz beschreiben, worum es in diesem Teil geht"></textarea>
+        <button type="submit" class="ghost">Unterthema hinzufügen</button>
+      </form>
+
+      <h2>Literaturverzeichnis</h2>
+      <p class="hint" id="bib-hint">Enthält nur Paper mit Passagen, die du als „in der Arbeit benutzt“ markiert hast.</p>
+      <label for="bib-style">Zitierweise</label>
+      <select id="bib-style"></select>
+      <div class="row"><button id="btn-bib">Literaturverzeichnis erstellen</button></div>
+      <div id="bib-permission" class="bib-permission" hidden>
+        <p id="bib-question"></p>
+        <div class="row">
+          <button id="bib-yes">Ja</button>
+          <button id="bib-no" class="ghost">Nein</button>
+        </div>
+      </div>
+      <div id="bib-status" class="status"></div>
+      <div id="bib-result" class="bib-result" hidden>
+        <div id="bib-entries" class="bib-entries"></div>
+        <div class="row"><button id="bib-copy" class="ghost">Verzeichnis kopieren</button></div>
+      </div>
+
+      </div>
+    </section>
+
+    <section class="panel right">
+      <div class="brain-head">
+        <h2>Gehirn</h2>
+        <div id="footprint" class="footprint"></div>
+      </div>
+      <div id="canvas-wrap" class="canvas-wrap">
+        <div id="mindmap"></div>
+      </div>
+    </section>
+  </main>
+
+
+  <dialog id="paper-dialog" class="paper-dialog">
+    <button id="paper-close" class="dialog-close" aria-label="Schließen" title="Schließen">×</button>
+    <div id="paper-body"></div>
+  </dialog>
+
+  <script src="_xpo/ecoxpo.js" onerror="this.remove()"></script>
+  <script src="api.js"></script>
+  <script src="mindmap.js"></script>
+  <script src="mascot.js"></script>
+  <script src="fulltext.js"></script>
+  <script src="copilot.js"></script>
+  <script src="app.js"></script>
+  <script src="bibliography.js"></script>
+</body>
+</html>
